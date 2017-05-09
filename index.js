@@ -19,7 +19,6 @@ client.on('data', function(data) {
 
   jsondata = JSON.stringify(data);
   parsed = JSON.parse(jsondata);
-  // console.log(parsed);
 
   // handle "eSense" data
   if (parsed.eSense) {
@@ -36,6 +35,7 @@ client.on('data', function(data) {
       cols: 12,
       screen: screen
     });
+    
     /**
      * Donut Options
       self.options.stroke = options.stroke || "magenta"
@@ -46,9 +46,8 @@ client.on('data', function(data) {
      */
 
     // determine dimension of donuts
-    var donut = grid.set(0, 0, 6, 12, contrib.donut,
-      {
-      label: 'Brain Status',
+    var donut = grid.set(0, 0, 6, 12, contrib.donut, {
+      label: 'Brain State',
       radius: 30,
       arcWidth: 10,
       yPadding: 2,
@@ -86,14 +85,15 @@ client.on('data', function(data) {
       }
     ]);
 
-    var bar = grid.set(6, 0, 6, 8, contrib.bar,
-      {
-      label: 'EEG(%)',
+    // read EEG values
+    var bar = grid.set(6, 0, 6, 12, contrib.bar, {
+      label: 'EEG (raw value)',
       barWidth: 6,
       barSpacing: 2,
       xOffset: 0,
-      maxHeight: 10000,
-      height: "40%"
+      maxHeight: 5000,
+      height: "50%",
+      barBgColor: 'green'
     });
 
     screen.append(bar);
@@ -103,31 +103,6 @@ client.on('data', function(data) {
       data: [parsed.eegPower.delta, parsed.eegPower.theta, parsed.eegPower.lowAlpha, parsed.eegPower.highAlpha, parsed.eegPower.lowBeta, parsed.eegPower.highBeta, parsed.eegPower.lowGamma, parsed.eegPower.highGamma]
     });
 
-    // var line = grid.set(6, 0, 6, 12, contrib.line,
-    //    { width: 80
-    //    , height: 30
-    //    , left: 15
-    //    , top: 12
-    //    , xPadding: 5
-    //    , minY: 30
-    //    , maxY: 90
-    //    , label: 'Title'
-    //    , style: { baseline: 'white' }
-    //  });
-    //
-    // var data = [ { title: 'Raw EEG',
-    //              x: ['delta', 'theta', 'lowAlpha', 'highAlpha', 'lowBeta', 'highBeta', 'lowGamma', 'highGamma'],
-    //              y: [parsed.eegPower.delta, parsed.eegPower.theta, parsed.eegPower.lowAlpha, parsed.eegPower.highAlpha, parsed.eegPower.lowBeta, parsed.eegPower.highBeta, parsed.eegPower.lowGamma, parsed.eegPower.highGamma],
-    //              style: {
-    //               line: 'red'
-    //              }
-    //            }
-    //         ];
-    //
-    //
-    // screen.append(line); //must append before setting data
-    // line.setData(data);
-
     // escape control
     screen.key(['escape', 'q', 'C-c'], function(ch, key) {
       return process.exit(0);
@@ -135,37 +110,12 @@ client.on('data', function(data) {
 
     // render on screen
     screen.render();
-
-    // var line = contrib.line(
-    //    { width: 80
-    //    , height: 30
-    //    , left: 15
-    //    , top: 12
-    //    , xPadding: 5
-    //    , minY: 30
-    //    , maxY: 90
-    //    , label: 'Title'
-    //    , style: { baseline: 'white' }
-    //    })
-    //
-    // , data = [ { title: 'us-east',
-    //              x: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-    //              y: [50, 88, 72, 91],
-    //              style: {
-    //               line: 'red'
-    //              }
-    //            }
-    //         ]
-    //
-    //
-    // screen.append(line) //must append before setting data
-    // line.setData(data)
   }
 
   // handle "poorSignal" parsed
   if (parsed.poorSignalLevel !== null) {
     poorSignalLevel = parseInt(parsed.poorSignalLevel);
-    console.log('\x1b[41m', 'Poor signal – awaiting transmission', '\x1b[0m');
+    console.log('\x1b[41m', 'Poor signal – establishing connection', '\x1b[0m');
   }
 });
 
