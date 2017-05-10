@@ -19,8 +19,8 @@ client.on('data', function(data) {
 
   jsondata = JSON.stringify(data);
   parsed = JSON.parse(jsondata);
-  console.log(jsondata);
-  //console.log(parsed);
+  //console.log(jsondata);
+  console.log(parsed);
 
   // // handle "eSense" data
   // if (parsed.eSense) {

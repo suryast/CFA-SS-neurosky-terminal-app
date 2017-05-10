@@ -35,7 +35,6 @@ client.on('data', function(data) {
       cols: 12,
       screen: screen
     });
-    
     /**
      * Donut Options
       self.options.stroke = options.stroke || "magenta"
